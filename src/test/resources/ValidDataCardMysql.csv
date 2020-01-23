@@ -1,0 +1,3 @@
+card, month, year, name, cvc, status, textStep
+"4444 4444 4444 4441", "11", "22", "Ivan Ivanov", "789", "APPROVED", "Карта со статусом APPROVED"
+"4444 4444 4444 4442", "11", "22", "Ivan Ivanov", "789", "DECLINED", "Карта со статусом DECLINED"

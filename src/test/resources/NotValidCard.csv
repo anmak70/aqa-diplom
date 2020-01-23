@@ -1,0 +1,2 @@
+card, month, year, name, cvc, status, textStep
+"4444 4444 4444 4444", "11", "22", "Ivan Ivanov", "789", " ", "Карта не валидная"
