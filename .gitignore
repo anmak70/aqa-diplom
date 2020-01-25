@@ -5,6 +5,7 @@ HELP.md
 build/
 data
 .allure
+bags_pic
 
 ### STS ###
 .apt_generated

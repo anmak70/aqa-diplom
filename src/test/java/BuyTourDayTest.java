@@ -214,7 +214,7 @@ public class BuyTourDayTest {
     @DisplayName("Если номер карты не валидный - в таблицы payment_entity и order_entity не добавляются записи")
     void checkPaymentNotValidCard(String card, String month, String year, String name, String cvc, String status, String textStep) throws SQLException {
         DataBaseUtil dataBaseUtil = new DataBaseUtil();
-        int countBeforeCredit = dataBaseUtil.receivedCountRecords(dataBaseUtil.countCredit);
+        int countBeforePayment = dataBaseUtil.receivedCountRecords(dataBaseUtil.countPayment);
         int countBeforeOrder = dataBaseUtil.receivedCountRecords(dataBaseUtil.countOrder);
         open(UrlLocalHostUtils.browserHost);
         ChoiceOfPaymentPage choiceOfPaymentPage = new ChoiceOfPaymentPage();
@@ -224,7 +224,7 @@ public class BuyTourDayTest {
         int countAfterCredit = dataBaseUtil.receivedCountRecords(dataBaseUtil.countCredit);
         int countAfterOrder = dataBaseUtil.receivedCountRecords(dataBaseUtil.countOrder);
         int countAfterPayment = dataBaseUtil.receivedCountRecords(dataBaseUtil.countPayment);
-        assertEquals(countBeforeCredit, countAfterCredit);
+        assertEquals(countBeforePayment, countAfterPayment);
         assertEquals(countBeforeOrder, countAfterOrder);
         assertEquals(countAfterCredit + countAfterPayment, countAfterOrder);
     }
