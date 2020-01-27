@@ -6,6 +6,7 @@ build/
 data
 .allure
 bags_pic
+/node_modules/
 
 ### STS ###
 .apt_generated

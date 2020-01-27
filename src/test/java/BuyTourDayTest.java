@@ -1,5 +1,6 @@
 import com.codeborne.selenide.logevents.SelenideLogger;
 import datautil.DataBaseUtil;
+import page.PageUtil;
 import datautil.UrlLocalHostUtils;
 import io.qameta.allure.selenide.AllureSelenide;
 import lombok.val;
@@ -24,10 +25,13 @@ public class BuyTourDayTest {
     static void setUpAll() {
         SelenideLogger.addListener("allure", new AllureSelenide());
     }
+
     @AfterAll
     static void tearDownAll() {
         SelenideLogger.removeListener("allure");
     }
+
+    PageUtil pageUtil = new PageUtil();
 
     @Test
     @DisplayName("Проверка выбора способа оплаты картой")
@@ -54,8 +58,8 @@ public class BuyTourDayTest {
         open(UrlLocalHostUtils.browserHost);
         ChoiceOfPaymentPage choiceOfPaymentPage = new ChoiceOfPaymentPage();
         PaymentCardPage paymentCardPage = choiceOfPaymentPage.checkBuyCardButton();
-        paymentCardPage.inputCardData(card, month, year, name, cvc);
-        paymentCardPage.checkPaymentCardValid(textStep);
+        pageUtil.inputCardData(card, month, year, name, cvc);
+        pageUtil.checkPaymentValid(textStep);
     }
 
     @ParameterizedTest
@@ -65,8 +69,8 @@ public class BuyTourDayTest {
         open(UrlLocalHostUtils.browserHost);
         ChoiceOfPaymentPage choiceOfPaymentPage = new ChoiceOfPaymentPage();
         PaymentCardPage paymentCardPage = choiceOfPaymentPage.checkBuyCardButton();
-        paymentCardPage.inputCardData(card, month, year, name, cvc);
-        paymentCardPage.checkPaymentCardNotValid(textError, textStep);
+        pageUtil.inputCardData(card, month, year, name, cvc);
+        pageUtil.checkPaymentNotValid(textError, textStep);
     }
 
     @ParameterizedTest
@@ -76,8 +80,8 @@ public class BuyTourDayTest {
         open(UrlLocalHostUtils.browserHost);
         ChoiceOfPaymentPage choiceOfPaymentPage = new ChoiceOfPaymentPage();
         PaymentCardPage paymentCardPage = choiceOfPaymentPage.checkBuyCardButton();
-        paymentCardPage.inputCardData(card, month, year, name, cvc);
-        paymentCardPage.checkPaymentNotValidCard(textStep);
+        pageUtil.inputCardData(card, month, year, name, cvc);
+        pageUtil.checkPaymentNotValidCard(textStep);
     }
 
 // Авто-тесты проверки покупки тура в кредит
@@ -89,8 +93,8 @@ public class BuyTourDayTest {
         open(UrlLocalHostUtils.browserHost);
         ChoiceOfPaymentPage choiceOfPaymentPage = new ChoiceOfPaymentPage();
         PaymentCreditPage paymentCreditPage = choiceOfPaymentPage.checkBuyCreditButton();
-        paymentCreditPage.inputCardDataCredit(card, month, year, name, cvc);
-        paymentCreditPage.checkPaymentCreditValid(textStep);
+        pageUtil.inputCardData(card, month, year, name, cvc);
+        pageUtil.checkPaymentValid(textStep);
     }
 
     @ParameterizedTest
@@ -100,8 +104,8 @@ public class BuyTourDayTest {
         open(UrlLocalHostUtils.browserHost);
         ChoiceOfPaymentPage choiceOfPaymentPage = new ChoiceOfPaymentPage();
         PaymentCreditPage paymentCreditPage = choiceOfPaymentPage.checkBuyCreditButton();
-        paymentCreditPage.inputCardDataCredit(card, month, year, name, cvc);
-        paymentCreditPage.checkPaymentCreditNotValid(textError, textStep);
+        pageUtil.inputCardData(card, month, year, name, cvc);
+        pageUtil.checkPaymentNotValid(textError, textStep);
     }
 
     @ParameterizedTest
@@ -111,8 +115,8 @@ public class BuyTourDayTest {
         open(UrlLocalHostUtils.browserHost);
         ChoiceOfPaymentPage choiceOfPaymentPage = new ChoiceOfPaymentPage();
         PaymentCreditPage paymentCreditPage = choiceOfPaymentPage.checkBuyCreditButton();
-        paymentCreditPage.inputCardDataCredit(card, month, year, name, cvc);
-        paymentCreditPage.checkPaymentCreditNotValidCard(textStep);
+        pageUtil.inputCardData(card, month, year, name, cvc);
+        pageUtil.checkPaymentNotValidCard(textStep);
     }
 
 // Авто-тесты проверки работы с БД
@@ -122,15 +126,15 @@ public class BuyTourDayTest {
     @DisplayName("Проверка поля amount таблицы payment_entity")
     void checkPaymentAmount(String card, String month, String year, String name, String cvc, String status, String textStep) throws SQLException {
         DataBaseUtil dataBaseUtil = new DataBaseUtil();
-        int countBefore = dataBaseUtil.receivedCountRecords(dataBaseUtil.countPayment);
+        int countBefore = dataBaseUtil.getNumberOfPaymentRecords();
         open(UrlLocalHostUtils.browserHost);
         ChoiceOfPaymentPage choiceOfPaymentPage = new ChoiceOfPaymentPage();
         PaymentCardPage paymentCardPage = choiceOfPaymentPage.checkBuyCardButton();
-        paymentCardPage.inputCardData(card, month, year, name, cvc);
-        paymentCardPage.checkPaymentCardValid(textStep);
-        int countAfter = dataBaseUtil.receivedCountRecords(dataBaseUtil.countPayment);
+        pageUtil.inputCardData(card, month, year, name, cvc);
+        pageUtil.checkPaymentValid(textStep);
+        int countAfter = dataBaseUtil.getNumberOfPaymentRecords();
         assertEquals(countBefore + 1, countAfter);
-        val rs = dataBaseUtil.receiveLastCreationRecordPayment(dataBaseUtil.lastCreationPaymentRecord);
+        val rs = dataBaseUtil.getLastCreationPaymentRecords();
         val amountCard = rs.getAmount();
         assertEquals(45000, amountCard);
     }
@@ -140,15 +144,15 @@ public class BuyTourDayTest {
     @DisplayName("Проверка поля status таблицы payment_entity")
     void checkPaymentStatus(String card, String month, String year, String name, String cvc, String status, String textStep) throws SQLException {
         DataBaseUtil dataBaseUtil = new DataBaseUtil();
-        int countBefore = dataBaseUtil.receivedCountRecords(dataBaseUtil.countPayment);
+        int countBefore = dataBaseUtil.getNumberOfPaymentRecords();
         open(UrlLocalHostUtils.browserHost);
         ChoiceOfPaymentPage choiceOfPaymentPage = new ChoiceOfPaymentPage();
         PaymentCardPage paymentCardPage = choiceOfPaymentPage.checkBuyCardButton();
-        paymentCardPage.inputCardData(card, month, year, name, cvc);
-        paymentCardPage.checkPaymentCardValid(textStep);
-        int countAfter = dataBaseUtil.receivedCountRecords(dataBaseUtil.countPayment);
+        pageUtil.inputCardData(card, month, year, name, cvc);
+        pageUtil.checkPaymentValid(textStep);
+        int countAfter = dataBaseUtil.getNumberOfPaymentRecords();
         assertEquals(countBefore + 1, countAfter);
-        val rs = dataBaseUtil.receiveLastCreationRecordPayment(dataBaseUtil.lastCreationPaymentRecord);
+        val rs = dataBaseUtil.getLastCreationPaymentRecords();
         val statusCard = rs.getStatus();
         assertEquals(status, statusCard);
     }
@@ -158,17 +162,17 @@ public class BuyTourDayTest {
     @DisplayName("Сравнение поля transaction_id таблицы payment_entity c payment_id таблицы order_entity")
     void comparePaymentOrder(String card, String month, String year, String name, String cvc, String status, String textStep) throws SQLException {
         DataBaseUtil dataBaseUtil = new DataBaseUtil();
-        int countBefore = dataBaseUtil.receivedCountRecords(dataBaseUtil.countPayment);
+        int countBefore = dataBaseUtil.getNumberOfPaymentRecords();
         open(UrlLocalHostUtils.browserHost);
         ChoiceOfPaymentPage choiceOfPaymentPage = new ChoiceOfPaymentPage();
         PaymentCardPage paymentCardPage = choiceOfPaymentPage.checkBuyCardButton();
-        paymentCardPage.inputCardData(card, month, year, name, cvc);
-        paymentCardPage.checkPaymentCardValid(textStep);
-        int countAfter = dataBaseUtil.receivedCountRecords(dataBaseUtil.countPayment);
+        pageUtil.inputCardData(card, month, year, name, cvc);
+        pageUtil.checkPaymentValid(textStep);
+        int countAfter = dataBaseUtil.getNumberOfPaymentRecords();
         assertEquals(countBefore + 1, countAfter);
-        val rs = dataBaseUtil.receiveLastCreationRecordPayment(dataBaseUtil.lastCreationPaymentRecord);
+        val rs = dataBaseUtil.getLastCreationPaymentRecords();
         val transactionCard = rs.getTransaction_id();
-        val tr = dataBaseUtil.compareOrderPaymentCredit(transactionCard, dataBaseUtil.comparePayment);
+        val tr = dataBaseUtil.compareOrderPayment(transactionCard);
         assertEquals(1, tr);
     }
 
@@ -177,15 +181,15 @@ public class BuyTourDayTest {
     @DisplayName("Проверка поля status таблицы credit_request_entity")
     void checkCreditStatus(String card, String month, String year, String name, String cvc, String status, String textStep) throws SQLException {
         DataBaseUtil dataBaseUtil = new DataBaseUtil();
-        int countBefore = dataBaseUtil.receivedCountRecords(dataBaseUtil.countCredit);
+        int countBefore = dataBaseUtil.getNumberOfCreditRecords();
         open(UrlLocalHostUtils.browserHost);
         ChoiceOfPaymentPage choiceOfPaymentPage = new ChoiceOfPaymentPage();
         PaymentCreditPage paymentCreditPage = choiceOfPaymentPage.checkBuyCreditButton();
-        paymentCreditPage.inputCardDataCredit(card, month, year, name, cvc);
-        paymentCreditPage.checkPaymentCreditValid(textStep);
-        int countAfter = dataBaseUtil.receivedCountRecords(dataBaseUtil.countCredit);
+        pageUtil.inputCardData(card, month, year, name, cvc);
+        pageUtil.checkPaymentValid(textStep);
+        int countAfter = dataBaseUtil.getNumberOfCreditRecords();
         assertEquals(countBefore + 1, countAfter);
-        val rs = dataBaseUtil.receiveLastCreationRecordCredit(dataBaseUtil.lastCreationCreditRecord);
+        val rs = dataBaseUtil.getLastCreationRecordCredit();
         val statusCard = rs.getStatus();
         assertEquals(status, statusCard);
     }
@@ -195,17 +199,17 @@ public class BuyTourDayTest {
     @DisplayName("Сравнение поля bank_id таблицы credit_request c credit_id таблицы order_entity")
     void compareCreditOrder(String card, String month, String year, String name, String cvc, String status, String textStep) throws SQLException {
         DataBaseUtil dataBaseUtil = new DataBaseUtil();
-        int countBefore = dataBaseUtil.receivedCountRecords(dataBaseUtil.countCredit);
+        int countBefore = dataBaseUtil.getNumberOfCreditRecords();
         open(UrlLocalHostUtils.browserHost);
         ChoiceOfPaymentPage choiceOfPaymentPage = new ChoiceOfPaymentPage();
         PaymentCreditPage paymentCreditPage = choiceOfPaymentPage.checkBuyCreditButton();
-        paymentCreditPage.inputCardDataCredit(card, month, year, name, cvc);
-        paymentCreditPage.checkPaymentCreditValid(textStep);
-        int countAfter = dataBaseUtil.receivedCountRecords(dataBaseUtil.countCredit);
+        pageUtil.inputCardData(card, month, year, name, cvc);
+        pageUtil.checkPaymentValid(textStep);
+        int countAfter = dataBaseUtil.getNumberOfCreditRecords();
         assertEquals(countBefore + 1, countAfter);
-        val rs = dataBaseUtil.receiveLastCreationRecordCredit(dataBaseUtil.lastCreationCreditRecord);
+        val rs = dataBaseUtil.getLastCreationRecordCredit();
         val bank = rs.getBank_id();
-        val tr = dataBaseUtil.compareOrderPaymentCredit(bank, dataBaseUtil.compareCredit);
+        val tr = dataBaseUtil.compareOrderCredit(bank);
         assertEquals(1, tr);
     }
 
@@ -214,16 +218,16 @@ public class BuyTourDayTest {
     @DisplayName("Если номер карты не валидный - в таблицы payment_entity и order_entity не добавляются записи")
     void checkPaymentNotValidCard(String card, String month, String year, String name, String cvc, String status, String textStep) throws SQLException {
         DataBaseUtil dataBaseUtil = new DataBaseUtil();
-        int countBeforePayment = dataBaseUtil.receivedCountRecords(dataBaseUtil.countPayment);
-        int countBeforeOrder = dataBaseUtil.receivedCountRecords(dataBaseUtil.countOrder);
+        int countBeforePayment = dataBaseUtil.getNumberOfPaymentRecords();
+        int countBeforeOrder = dataBaseUtil.getNumberOfOrderRecords();
         open(UrlLocalHostUtils.browserHost);
         ChoiceOfPaymentPage choiceOfPaymentPage = new ChoiceOfPaymentPage();
         PaymentCardPage paymentCardPage = choiceOfPaymentPage.checkBuyCardButton();
-        paymentCardPage.inputCardData(card, month, year, name, cvc);
-        paymentCardPage.checkPaymentNotValidCard(textStep);
-        int countAfterCredit = dataBaseUtil.receivedCountRecords(dataBaseUtil.countCredit);
-        int countAfterOrder = dataBaseUtil.receivedCountRecords(dataBaseUtil.countOrder);
-        int countAfterPayment = dataBaseUtil.receivedCountRecords(dataBaseUtil.countPayment);
+        pageUtil.inputCardData(card, month, year, name, cvc);
+        pageUtil.checkPaymentNotValidCard(textStep);
+        int countAfterCredit = dataBaseUtil.getNumberOfCreditRecords();
+        int countAfterOrder = dataBaseUtil.getNumberOfOrderRecords();
+        int countAfterPayment = dataBaseUtil.getNumberOfPaymentRecords();
         assertEquals(countBeforePayment, countAfterPayment);
         assertEquals(countBeforeOrder, countAfterOrder);
         assertEquals(countAfterCredit + countAfterPayment, countAfterOrder);
@@ -234,16 +238,16 @@ public class BuyTourDayTest {
     @DisplayName("Если номер карты не валидный - в таблицы credit_request_entity и order_entity не добавляются записи")
     void checkCreditNotValidCard(String card, String month, String year, String name, String cvc, String status, String textStep) throws SQLException {
         DataBaseUtil dataBaseUtil = new DataBaseUtil();
-        int countBeforeCredit = dataBaseUtil.receivedCountRecords(dataBaseUtil.countCredit);
-        int countBeforeOrder = dataBaseUtil.receivedCountRecords(dataBaseUtil.countOrder);
+        int countBeforeCredit = dataBaseUtil.getNumberOfCreditRecords();
+        int countBeforeOrder = dataBaseUtil.getNumberOfOrderRecords();
         open(UrlLocalHostUtils.browserHost);
         ChoiceOfPaymentPage choiceOfPaymentPage = new ChoiceOfPaymentPage();
         PaymentCreditPage paymentCreditPage = choiceOfPaymentPage.checkBuyCreditButton();
-        paymentCreditPage.inputCardDataCredit(card, month, year, name, cvc);
-        paymentCreditPage.checkPaymentCreditNotValidCard(textStep);
-        int countAfterCredit = dataBaseUtil.receivedCountRecords(dataBaseUtil.countCredit);
-        int countAfterOrder = dataBaseUtil.receivedCountRecords(dataBaseUtil.countOrder);
-        int countAfterPayment = dataBaseUtil.receivedCountRecords(dataBaseUtil.countPayment);
+        pageUtil.inputCardData(card, month, year, name, cvc);
+        pageUtil.checkPaymentNotValidCard(textStep);
+        int countAfterCredit = dataBaseUtil.getNumberOfCreditRecords();
+        int countAfterOrder = dataBaseUtil.getNumberOfOrderRecords();
+        int countAfterPayment = dataBaseUtil.getNumberOfPaymentRecords();
         assertEquals(countBeforeCredit, countAfterCredit);
         assertEquals(countBeforeOrder, countAfterOrder);
         assertEquals(countAfterCredit + countAfterPayment, countAfterOrder);

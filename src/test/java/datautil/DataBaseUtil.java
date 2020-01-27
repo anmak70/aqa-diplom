@@ -15,18 +15,33 @@ public class DataBaseUtil {
     private static String user = "app";
     private static String password = "pass";
 
-    public static String countPayment = "SELECT COUNT(*) FROM payment_entity;";
-    public static String countCredit = "SELECT COUNT(*) FROM credit_request_entity;";
-    public static String countOrder = "SELECT COUNT(*) FROM order_entity;";
-    public static String lastCreationPaymentRecord = "SELECT amount, status, transaction_id FROM payment_entity ORDER BY created DESC LIMIT 1;";
-    public static String lastCreationCreditRecord = "SELECT bank_id, status FROM credit_request_entity ORDER BY created DESC LIMIT 1;";
-    public static String comparePayment = "SELECT COUNT(*) FROM order_entity WHERE payment_id = ?;";
-    public static String compareCredit = "SELECT COUNT(*) FROM order_entity WHERE credit_id = ?;";
+    private String countPayment = "SELECT COUNT(*) FROM payment_entity;";
+    private String countCredit = "SELECT COUNT(*) FROM credit_request_entity;";
+    private String countOrder = "SELECT COUNT(*) FROM order_entity;";
+    private String lastCreationPaymentRecord = "SELECT amount, status, transaction_id FROM payment_entity ORDER BY created DESC LIMIT 1;";
+    private String lastCreationCreditRecord = "SELECT bank_id, status FROM credit_request_entity ORDER BY created DESC LIMIT 1;";
+    private String comparePayment = "SELECT COUNT(*) FROM order_entity WHERE payment_id = ?;";
+    private String compareCredit = "SELECT COUNT(*) FROM order_entity WHERE credit_id = ?;";
 
     public DataBaseUtil() throws SQLException {
     }
 
-    public int receivedCountRecords(String request) throws SQLException {
+    public int getNumberOfPaymentRecords() throws SQLException {
+        int count = receivedCountRecords(countPayment);
+        return count;
+    }
+
+    public int getNumberOfCreditRecords() throws SQLException {
+        int count = receivedCountRecords(countCredit);
+        return count;
+    }
+
+    public int getNumberOfOrderRecords() throws SQLException {
+        int count = receivedCountRecords(countOrder);
+        return count;
+    }
+
+    private int receivedCountRecords(String request) throws SQLException {
         val runner = new QueryRunner();
         try (
                 val conn = DriverManager.getConnection(urlMysql, user, password);
@@ -37,38 +52,48 @@ public class DataBaseUtil {
         }
     }
 
-    public Payment receiveLastCreationRecordPayment(String request) throws SQLException {
+    public Payment getLastCreationPaymentRecords() throws SQLException {
         val runner = new QueryRunner();
         try (
                 val conn = DriverManager.getConnection(urlMysql, user, password);
         ) {
-            val rs = runner.query(conn, request, new BeanHandler<>(Payment.class));
+            val rs = runner.query(conn, lastCreationPaymentRecord, new BeanHandler<>(Payment.class));
             return rs;
         }
     }
 
-    public Credit receiveLastCreationRecordCredit(String request) throws SQLException {
+    public Credit getLastCreationRecordCredit() throws SQLException {
         val runner = new QueryRunner();
         try (
                 val conn = DriverManager.getConnection(urlMysql, user, password);
         ) {
-            val rs = runner.query(conn, request, new BeanHandler<>(Credit.class));
+            val rs = runner.query(conn, lastCreationCreditRecord, new BeanHandler<>(Credit.class));
             return rs;
         }
     }
 
-    @Step("Сравнение transaction_id/bank_id таблицы payment_entity/credit_request_entity с payment_id/credit_id таблицы order_entity")
-    public int compareOrderPaymentCredit(String transaction, String request) throws SQLException {
+    @Step("Сравнение transaction_id таблицы payment_entity с payment_id таблицы order_entity")
+    public int compareOrderPayment(String transaction) throws SQLException {
         val runner = new QueryRunner();
         try (
                 val conn = DriverManager.getConnection(urlMysql, user, password);
         ) {
-            val rs = runner.query(conn, request, transaction, new ScalarHandler<>());
+           val rs = runner.query(conn, comparePayment, new ScalarHandler<>(), transaction);
             int cp = Integer.parseInt(rs.toString());
             return cp;
         }
     }
 
-
+    @Step("Сравнение bank_id таблицы credit_request_entity с credit_id таблицы order_entity")
+    public int compareOrderCredit(String transaction) throws SQLException {
+        val runner = new QueryRunner();
+        try (
+                val conn = DriverManager.getConnection(urlMysql, user, password);
+        ) {
+            val rs = runner.query(conn, compareCredit, new ScalarHandler<>(), transaction);
+            int cp = Integer.parseInt(rs.toString());
+            return cp;
+        }
+    }
 
 }
