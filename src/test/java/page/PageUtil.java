@@ -38,21 +38,21 @@ public class PageUtil {
         inputCVC.setValue(cvc);
     }
 
-    @Step("Выполняется проверка оплаты картой валидные данные - {textStep}")
-    public void checkPaymentValid(String textStep) {
+    @Step("Выполняется проверка оплаты картой валидные данные")
+    public void checkPaymentValid() {
         buttonContinue.click();
         approvedOperation.waitUntil(Condition.visible, timeOut);
     }
 
-    @Step("Выполняется проверка оплаты кредитом не валидные данные - {textStep}")
-    public void checkPaymentNotValid(String textError, String textStep) {
+    @Step("Выполняется проверка оплаты кредитом не валидные данные")
+    public void checkPaymentNotValid(String textError) {
         buttonContinue.click();
         SelenideElement errorField = errorText.findBy(Condition.text(textError));
         errorField.waitUntil(Condition.visible, timeOut);
     }
 
-    @Step("Выполняется проверка появления всплывающего окна с ошибкой - Банк отклонил операцию - {textStep}")
-    public void checkPaymentNotValidCard(String textStep) {
+    @Step("Выполняется проверка появления всплывающего окна с ошибкой - Банк отклонил операцию")
+    public void checkPaymentNotValidCard() {
         buttonContinue.click();
         errorOperation.waitUntil(Condition.visible, timeOut);
     }

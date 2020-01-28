@@ -1,5 +1,5 @@
 package datautil;
 
-public class UrlLocalHostUtils {
+public class UrlUtils {
     public static String browserHost = "http://localhost:8080";
 }

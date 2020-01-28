@@ -1,3 +1,3 @@
-card, month, year, name, cvc, textStep
-"4444 4444 4444 4442", "11", "22", "Ivan Ivanov", "789", "Карта со статусом DECLINED"
-"4444 4444 4444 4444", "11", "22", "Ivan Ivanov", "789", "Карта не валидная"
+card, month, year, name, cvc
+"4444 4444 4444 4442", "11", "22", "Ivan Ivanov", "789"
+"4444 4444 4444 4444", "11", "22", "Ivan Ivanov", "789"

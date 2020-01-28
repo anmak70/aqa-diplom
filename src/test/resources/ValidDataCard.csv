@@ -1,2 +1,2 @@
-card, month, year, name, cvc, textStep
-"4444 4444 4444 4441", "11", "22", "Ivan Ivanov", "789", "Карта со статусом APPROVED"
+card, month, year, name, cvc
+"4444 4444 4444 4441", "11", "22", "Ivan Ivanov", "789"

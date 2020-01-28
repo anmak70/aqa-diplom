@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 public class DataBaseUtil {
 
-    private static String urlMysql = "jdbc:mysql://192.168.99.100:3306/app";
+    private static String urlSql = "jdbc:mysql://192.168.99.100:3306/app";
     private static String user = "app";
     private static String password = "pass";
 
@@ -44,10 +44,10 @@ public class DataBaseUtil {
     private int receivedCountRecords(String request) throws SQLException {
         val runner = new QueryRunner();
         try (
-                val conn = DriverManager.getConnection(urlMysql, user, password);
+                val conn = DriverManager.getConnection(urlSql, user, password);
         ) {
-            val cn = runner.query(conn, request, new ScalarHandler<>());
-            int count = Integer.parseInt(cn.toString());
+            val countRecord = runner.query(conn, request, new ScalarHandler<>());
+            int count = Integer.parseInt(countRecord.toString());
             return count;
         }
     }
@@ -55,20 +55,20 @@ public class DataBaseUtil {
     public Payment getLastCreationPaymentRecords() throws SQLException {
         val runner = new QueryRunner();
         try (
-                val conn = DriverManager.getConnection(urlMysql, user, password);
+                val conn = DriverManager.getConnection(urlSql, user, password);
         ) {
-            val rs = runner.query(conn, lastCreationPaymentRecord, new BeanHandler<>(Payment.class));
-            return rs;
+            val lastRecord = runner.query(conn, lastCreationPaymentRecord, new BeanHandler<>(Payment.class));
+            return lastRecord;
         }
     }
 
     public Credit getLastCreationRecordCredit() throws SQLException {
         val runner = new QueryRunner();
         try (
-                val conn = DriverManager.getConnection(urlMysql, user, password);
+                val conn = DriverManager.getConnection(urlSql, user, password);
         ) {
-            val rs = runner.query(conn, lastCreationCreditRecord, new BeanHandler<>(Credit.class));
-            return rs;
+            val lastRecord = runner.query(conn, lastCreationCreditRecord, new BeanHandler<>(Credit.class));
+            return lastRecord;
         }
     }
 
@@ -76,11 +76,11 @@ public class DataBaseUtil {
     public int compareOrderPayment(String transaction) throws SQLException {
         val runner = new QueryRunner();
         try (
-                val conn = DriverManager.getConnection(urlMysql, user, password);
+                val conn = DriverManager.getConnection(urlSql, user, password);
         ) {
-           val rs = runner.query(conn, comparePayment, new ScalarHandler<>(), transaction);
-            int cp = Integer.parseInt(rs.toString());
-            return cp;
+           val compareResult = runner.query(conn, comparePayment, new ScalarHandler<>(), transaction);
+            int compare = Integer.parseInt(compareResult.toString());
+            return compare;
         }
     }
 
@@ -88,11 +88,11 @@ public class DataBaseUtil {
     public int compareOrderCredit(String transaction) throws SQLException {
         val runner = new QueryRunner();
         try (
-                val conn = DriverManager.getConnection(urlMysql, user, password);
+                val conn = DriverManager.getConnection(urlSql, user, password);
         ) {
-            val rs = runner.query(conn, compareCredit, new ScalarHandler<>(), transaction);
-            int cp = Integer.parseInt(rs.toString());
-            return cp;
+            val compareResult = runner.query(conn, compareCredit, new ScalarHandler<>(), transaction);
+            int compare = Integer.parseInt(compareResult.toString());
+            return compare;
         }
     }
 
