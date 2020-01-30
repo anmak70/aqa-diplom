@@ -9,10 +9,9 @@ import static org.openqa.selenium.By.cssSelector;
 
 public class PaymentCreditPage {
 
-    private By paymentLocator = cssSelector(".heading");
-    private SelenideElement paymentCreditHead = $$(paymentLocator).findBy(Condition.text("Кредит по данным карты"));
-
     public PaymentCreditPage() {
+        By paymentLocator = cssSelector(".heading");
+        SelenideElement paymentCreditHead = $$(paymentLocator).findBy(Condition.text("Кредит по данным карты"));
         paymentCreditHead.waitUntil(Condition.visible, PageUtil.timeOut);
     }
 }

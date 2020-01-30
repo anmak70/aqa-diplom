@@ -1,6 +1,5 @@
 import com.codeborne.selenide.logevents.SelenideLogger;
 import datautil.DataBaseUtil;
-import page.PageUtil;
 import datautil.UrlUtils;
 import io.qameta.allure.selenide.AllureSelenide;
 import lombok.val;
@@ -11,10 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import page.ChoiceOfPaymentPage;
-import page.PaymentCardPage;
-import page.PaymentCreditPage;
-
-import java.sql.SQLException;
+import page.PageUtil;
 
 import static com.codeborne.selenide.Selenide.open;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -38,7 +34,7 @@ public class BuyTourDayTest {
     void checkChoiceOfPaymentCard() {
         open(UrlUtils.browserHost);
         ChoiceOfPaymentPage choiceOfPaymentPage = new ChoiceOfPaymentPage();
-        PaymentCardPage paymentCardPage = choiceOfPaymentPage.checkBuyCardButton();
+        choiceOfPaymentPage.checkBuyCardButton();
     }
 
     @Test
@@ -46,7 +42,7 @@ public class BuyTourDayTest {
     void checkChoiceOfPaymentCredit() {
         open(UrlUtils.browserHost);
         ChoiceOfPaymentPage choiceOfPaymentPage = new ChoiceOfPaymentPage();
-        PaymentCreditPage paymentCreditPage = choiceOfPaymentPage.checkBuyCreditButton();
+        choiceOfPaymentPage.checkBuyCreditButton();
     }
 
 // Авто-тесты проверки покупки тура по дебетовой карте
@@ -57,7 +53,7 @@ public class BuyTourDayTest {
     void checkValidPaymentCard(String card, String month, String year, String name, String cvc) {
         open(UrlUtils.browserHost);
         ChoiceOfPaymentPage choiceOfPaymentPage = new ChoiceOfPaymentPage();
-        PaymentCardPage paymentCardPage = choiceOfPaymentPage.checkBuyCardButton();
+        choiceOfPaymentPage.chooseCardPayment();
         pageUtil.inputCardData(card, month, year, name, cvc);
         pageUtil.checkPaymentValid();
     }
@@ -68,7 +64,7 @@ public class BuyTourDayTest {
     void checkNotValidPaymentCard(String card, String month, String year, String name, String cvc, String textError) {
         open(UrlUtils.browserHost);
         ChoiceOfPaymentPage choiceOfPaymentPage = new ChoiceOfPaymentPage();
-        PaymentCardPage paymentCardPage = choiceOfPaymentPage.checkBuyCardButton();
+        choiceOfPaymentPage.chooseCardPayment();
         pageUtil.inputCardData(card, month, year, name, cvc);
         pageUtil.checkPaymentNotValid(textError);
     }
@@ -79,7 +75,7 @@ public class BuyTourDayTest {
     void checkValidPaymentCardDeclined(String card, String month, String year, String name, String cvc) {
         open(UrlUtils.browserHost);
         ChoiceOfPaymentPage choiceOfPaymentPage = new ChoiceOfPaymentPage();
-        PaymentCardPage paymentCardPage = choiceOfPaymentPage.checkBuyCardButton();
+        choiceOfPaymentPage.chooseCardPayment();
         pageUtil.inputCardData(card, month, year, name, cvc);
         pageUtil.checkPaymentNotValidCard();
     }
@@ -92,7 +88,7 @@ public class BuyTourDayTest {
     void checkValidPaymentCredit(String card, String month, String year, String name, String cvc) {
         open(UrlUtils.browserHost);
         ChoiceOfPaymentPage choiceOfPaymentPage = new ChoiceOfPaymentPage();
-        PaymentCreditPage paymentCreditPage = choiceOfPaymentPage.checkBuyCreditButton();
+        choiceOfPaymentPage.chooseCreditPayment();
         pageUtil.inputCardData(card, month, year, name, cvc);
         pageUtil.checkPaymentValid();
     }
@@ -103,18 +99,18 @@ public class BuyTourDayTest {
     void checkNotValidPaymentCredit(String card, String month, String year, String name, String cvc, String textError) {
         open(UrlUtils.browserHost);
         ChoiceOfPaymentPage choiceOfPaymentPage = new ChoiceOfPaymentPage();
-        PaymentCreditPage paymentCreditPage = choiceOfPaymentPage.checkBuyCreditButton();
+        choiceOfPaymentPage.chooseCreditPayment();
         pageUtil.inputCardData(card, month, year, name, cvc);
         pageUtil.checkPaymentNotValid(textError);
     }
 
     @ParameterizedTest
     @CsvFileSource(resources = "/ValidDataCardDeclined.csv", numLinesToSkip = 1)
-    @DisplayName("Проверка оплаты по карте с валидными данными статус DECLINED, карта 4444 ... 4444")
+    @DisplayName("Проверка оплаты кредитом с валидными данными статус DECLINED, карта 4444 ... 4444")
     void checkValidCreditCardDeclined(String card, String month, String year, String name, String cvc) {
         open(UrlUtils.browserHost);
         ChoiceOfPaymentPage choiceOfPaymentPage = new ChoiceOfPaymentPage();
-        PaymentCreditPage paymentCreditPage = choiceOfPaymentPage.checkBuyCreditButton();
+        choiceOfPaymentPage.chooseCreditPayment();
         pageUtil.inputCardData(card, month, year, name, cvc);
         pageUtil.checkPaymentNotValidCard();
     }
@@ -124,12 +120,12 @@ public class BuyTourDayTest {
     @ParameterizedTest
     @CsvFileSource(resources = "/ValidDataCardMysql.csv", numLinesToSkip = 1)
     @DisplayName("Проверка поля amount таблицы payment_entity")
-    void checkPaymentAmount(String card, String month, String year, String name, String cvc, String status) throws SQLException {
+    void checkPaymentAmount(String card, String month, String year, String name, String cvc) {
         DataBaseUtil dataBaseUtil = new DataBaseUtil();
         int countBefore = dataBaseUtil.getNumberOfPaymentRecords();
         open(UrlUtils.browserHost);
         ChoiceOfPaymentPage choiceOfPaymentPage = new ChoiceOfPaymentPage();
-        PaymentCardPage paymentCardPage = choiceOfPaymentPage.checkBuyCardButton();
+        choiceOfPaymentPage.chooseCardPayment();
         pageUtil.inputCardData(card, month, year, name, cvc);
         pageUtil.checkPaymentValid();
         int countAfter = dataBaseUtil.getNumberOfPaymentRecords();
@@ -142,12 +138,12 @@ public class BuyTourDayTest {
     @ParameterizedTest
     @CsvFileSource(resources = "/ValidDataCardMysql.csv", numLinesToSkip = 1)
     @DisplayName("Проверка поля status таблицы payment_entity")
-    void checkPaymentStatus(String card, String month, String year, String name, String cvc, String status) throws SQLException {
+    void checkPaymentStatus(String card, String month, String year, String name, String cvc, String status) {
         DataBaseUtil dataBaseUtil = new DataBaseUtil();
         int countBefore = dataBaseUtil.getNumberOfPaymentRecords();
         open(UrlUtils.browserHost);
         ChoiceOfPaymentPage choiceOfPaymentPage = new ChoiceOfPaymentPage();
-        PaymentCardPage paymentCardPage = choiceOfPaymentPage.checkBuyCardButton();
+        choiceOfPaymentPage.chooseCardPayment();
         pageUtil.inputCardData(card, month, year, name, cvc);
         pageUtil.checkPaymentValid();
         int countAfter = dataBaseUtil.getNumberOfPaymentRecords();
@@ -160,12 +156,12 @@ public class BuyTourDayTest {
     @ParameterizedTest
     @CsvFileSource(resources = "/ValidDataCardMysql.csv", numLinesToSkip = 1)
     @DisplayName("Сравнение поля transaction_id таблицы payment_entity c payment_id таблицы order_entity")
-    void comparePaymentOrder(String card, String month, String year, String name, String cvc, String status) throws SQLException {
+    void comparePaymentOrder(String card, String month, String year, String name, String cvc) {
         DataBaseUtil dataBaseUtil = new DataBaseUtil();
         int countBefore = dataBaseUtil.getNumberOfPaymentRecords();
         open(UrlUtils.browserHost);
         ChoiceOfPaymentPage choiceOfPaymentPage = new ChoiceOfPaymentPage();
-        PaymentCardPage paymentCardPage = choiceOfPaymentPage.checkBuyCardButton();
+        choiceOfPaymentPage.chooseCardPayment();
         pageUtil.inputCardData(card, month, year, name, cvc);
         pageUtil.checkPaymentValid();
         int countAfter = dataBaseUtil.getNumberOfPaymentRecords();
@@ -179,12 +175,12 @@ public class BuyTourDayTest {
     @ParameterizedTest
     @CsvFileSource(resources = "/ValidDataCardMysql.csv", numLinesToSkip = 1)
     @DisplayName("Проверка поля status таблицы credit_request_entity")
-    void checkCreditStatus(String card, String month, String year, String name, String cvc, String status) throws SQLException {
+    void checkCreditStatus(String card, String month, String year, String name, String cvc, String status) {
         DataBaseUtil dataBaseUtil = new DataBaseUtil();
         int countBefore = dataBaseUtil.getNumberOfCreditRecords();
         open(UrlUtils.browserHost);
         ChoiceOfPaymentPage choiceOfPaymentPage = new ChoiceOfPaymentPage();
-        PaymentCreditPage paymentCreditPage = choiceOfPaymentPage.checkBuyCreditButton();
+        choiceOfPaymentPage.chooseCreditPayment();
         pageUtil.inputCardData(card, month, year, name, cvc);
         pageUtil.checkPaymentValid();
         int countAfter = dataBaseUtil.getNumberOfCreditRecords();
@@ -197,12 +193,12 @@ public class BuyTourDayTest {
     @ParameterizedTest
     @CsvFileSource(resources = "/ValidDataCardMysql.csv", numLinesToSkip = 1)
     @DisplayName("Сравнение поля bank_id таблицы credit_request c credit_id таблицы order_entity")
-    void compareCreditOrder(String card, String month, String year, String name, String cvc, String status) throws SQLException {
+    void compareCreditOrder(String card, String month, String year, String name, String cvc) {
         DataBaseUtil dataBaseUtil = new DataBaseUtil();
         int countBefore = dataBaseUtil.getNumberOfCreditRecords();
         open(UrlUtils.browserHost);
         ChoiceOfPaymentPage choiceOfPaymentPage = new ChoiceOfPaymentPage();
-        PaymentCreditPage paymentCreditPage = choiceOfPaymentPage.checkBuyCreditButton();
+        choiceOfPaymentPage.chooseCreditPayment();
         pageUtil.inputCardData(card, month, year, name, cvc);
         pageUtil.checkPaymentValid();
         int countAfter = dataBaseUtil.getNumberOfCreditRecords();
@@ -216,13 +212,13 @@ public class BuyTourDayTest {
     @ParameterizedTest
     @CsvFileSource(resources = "/NotValidCard.csv", numLinesToSkip = 1)
     @DisplayName("Если номер карты не валидный - в таблицы payment_entity и order_entity не добавляются записи")
-    void checkPaymentNotValidCard(String card, String month, String year, String name, String cvc, String status) throws SQLException {
+    void checkPaymentNotValidCard(String card, String month, String year, String name, String cvc) {
         DataBaseUtil dataBaseUtil = new DataBaseUtil();
         int countBeforePayment = dataBaseUtil.getNumberOfPaymentRecords();
         int countBeforeOrder = dataBaseUtil.getNumberOfOrderRecords();
         open(UrlUtils.browserHost);
         ChoiceOfPaymentPage choiceOfPaymentPage = new ChoiceOfPaymentPage();
-        PaymentCardPage paymentCardPage = choiceOfPaymentPage.checkBuyCardButton();
+        choiceOfPaymentPage.chooseCardPayment();
         pageUtil.inputCardData(card, month, year, name, cvc);
         pageUtil.checkPaymentNotValidCard();
         int countAfterCredit = dataBaseUtil.getNumberOfCreditRecords();
@@ -236,13 +232,13 @@ public class BuyTourDayTest {
     @ParameterizedTest
     @CsvFileSource(resources = "/NotValidCard.csv", numLinesToSkip = 1)
     @DisplayName("Если номер карты не валидный - в таблицы credit_request_entity и order_entity не добавляются записи")
-    void checkCreditNotValidCard(String card, String month, String year, String name, String cvc, String status) throws SQLException {
+    void checkCreditNotValidCard(String card, String month, String year, String name, String cvc) {
         DataBaseUtil dataBaseUtil = new DataBaseUtil();
         int countBeforeCredit = dataBaseUtil.getNumberOfCreditRecords();
         int countBeforeOrder = dataBaseUtil.getNumberOfOrderRecords();
         open(UrlUtils.browserHost);
         ChoiceOfPaymentPage choiceOfPaymentPage = new ChoiceOfPaymentPage();
-        PaymentCreditPage paymentCreditPage = choiceOfPaymentPage.checkBuyCreditButton();
+        choiceOfPaymentPage.chooseCreditPayment();
         pageUtil.inputCardData(card, month, year, name, cvc);
         pageUtil.checkPaymentNotValidCard();
         int countAfterCredit = dataBaseUtil.getNumberOfCreditRecords();

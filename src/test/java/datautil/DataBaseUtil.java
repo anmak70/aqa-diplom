@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 public class DataBaseUtil {
 
-    private static String urlSql = "jdbc:mysql://192.168.99.100:3306/app";
+    private static String urlSql = System.getProperty("urlDb");
     private static String user = "app";
     private static String password = "pass";
 
@@ -23,77 +23,92 @@ public class DataBaseUtil {
     private String comparePayment = "SELECT COUNT(*) FROM order_entity WHERE payment_id = ?;";
     private String compareCredit = "SELECT COUNT(*) FROM order_entity WHERE credit_id = ?;";
 
-    public DataBaseUtil() throws SQLException {
+    public DataBaseUtil() {
     }
 
-    public int getNumberOfPaymentRecords() throws SQLException {
+    public int getNumberOfPaymentRecords() {
         int count = receivedCountRecords(countPayment);
         return count;
     }
 
-    public int getNumberOfCreditRecords() throws SQLException {
+    public int getNumberOfCreditRecords() {
         int count = receivedCountRecords(countCredit);
         return count;
     }
 
-    public int getNumberOfOrderRecords() throws SQLException {
+    public int getNumberOfOrderRecords() {
         int count = receivedCountRecords(countOrder);
         return count;
     }
 
-    private int receivedCountRecords(String request) throws SQLException {
+    private int receivedCountRecords(String request) {
         val runner = new QueryRunner();
+        int count = 0;
         try (
-                val conn = DriverManager.getConnection(urlSql, user, password);
+                val conn = DriverManager.getConnection(urlSql, user, password)
         ) {
             val countRecord = runner.query(conn, request, new ScalarHandler<>());
-            int count = Integer.parseInt(countRecord.toString());
-            return count;
+            count = Integer.parseInt(countRecord.toString());
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return count;
     }
 
-    public Payment getLastCreationPaymentRecords() throws SQLException {
+    public Payment getLastCreationPaymentRecords() {
         val runner = new QueryRunner();
+        Payment lastRecord = null;
         try (
                 val conn = DriverManager.getConnection(urlSql, user, password);
         ) {
-            val lastRecord = runner.query(conn, lastCreationPaymentRecord, new BeanHandler<>(Payment.class));
-            return lastRecord;
+            lastRecord = runner.query(conn, lastCreationPaymentRecord, new BeanHandler<>(Payment.class));
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return lastRecord;
     }
 
-    public Credit getLastCreationRecordCredit() throws SQLException {
+    public Credit getLastCreationRecordCredit() {
         val runner = new QueryRunner();
+        Credit lastRecord = null;
         try (
                 val conn = DriverManager.getConnection(urlSql, user, password);
         ) {
-            val lastRecord = runner.query(conn, lastCreationCreditRecord, new BeanHandler<>(Credit.class));
-            return lastRecord;
+            lastRecord = runner.query(conn, lastCreationCreditRecord, new BeanHandler<>(Credit.class));
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return lastRecord;
     }
 
     @Step("Сравнение transaction_id таблицы payment_entity с payment_id таблицы order_entity")
-    public int compareOrderPayment(String transaction) throws SQLException {
+    public int compareOrderPayment(String transaction) {
         val runner = new QueryRunner();
+        int compare = 0;
         try (
                 val conn = DriverManager.getConnection(urlSql, user, password);
         ) {
            val compareResult = runner.query(conn, comparePayment, new ScalarHandler<>(), transaction);
-            int compare = Integer.parseInt(compareResult.toString());
-            return compare;
+            compare = Integer.parseInt(compareResult.toString());
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return compare;
     }
 
     @Step("Сравнение bank_id таблицы credit_request_entity с credit_id таблицы order_entity")
-    public int compareOrderCredit(String transaction) throws SQLException {
+    public int compareOrderCredit(String transaction) {
         val runner = new QueryRunner();
+        int compare = 0;
         try (
                 val conn = DriverManager.getConnection(urlSql, user, password);
         ) {
             val compareResult = runner.query(conn, compareCredit, new ScalarHandler<>(), transaction);
-            int compare = Integer.parseInt(compareResult.toString());
-            return compare;
+            compare = Integer.parseInt(compareResult.toString());
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return compare;
     }
 
 }
