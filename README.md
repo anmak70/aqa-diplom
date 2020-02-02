@@ -22,4 +22,4 @@
 ### Issues
   На Issues № #1, #2, #3, #4, #21, #22 авто-тесты не делались. Остальные issues написаны по авто-тестам.
   
-### [Отчет о проведенной автоматизации (предварительно)] (https://github.com/anmak70/aqa-diplom/blob/master/Report.md)  
+### [Отчет о проведенной автоматизации (предварительно)](https://github.com/anmak70/aqa-diplom/blob/master/Report.md)  
