@@ -45,7 +45,6 @@ public class BuyTourDayTest {
         choiceOfPaymentPage.checkBuyCreditButton();
     }
 
-// Авто-тесты проверки покупки тура по дебетовой карте
 
     @ParameterizedTest
     @CsvFileSource(resources = "/ValidDataCard.csv", numLinesToSkip = 1)
@@ -80,7 +79,6 @@ public class BuyTourDayTest {
         pageUtil.checkPaymentNotValidCard();
     }
 
-// Авто-тесты проверки покупки тура в кредит
 
     @ParameterizedTest
     @CsvFileSource(resources = "/ValidDataCard.csv", numLinesToSkip = 1)
@@ -115,7 +113,6 @@ public class BuyTourDayTest {
         pageUtil.checkPaymentNotValidCard();
     }
 
-// Авто-тесты проверки работы с БД
 
     @ParameterizedTest
     @CsvFileSource(resources = "/ValidDataCardMysql.csv", numLinesToSkip = 1)

@@ -41,6 +41,28 @@ public class DataBaseUtil {
         return count;
     }
 
+    public Payment getLastCreationPaymentRecords() {
+        Payment lastRecord = lastCreationPaymentRecords();
+        return lastRecord;
+    }
+
+    public Credit getLastCreationRecordCredit() {
+        Credit lastRecord = lastCreationRecordCredit();
+        return lastRecord;
+    }
+
+    public int compareOrderPayment(String transaction) {
+        String transactionId = transaction;
+        int compare = compareOrderPaymentId(transactionId);
+        return compare;
+    }
+
+    public int compareOrderCredit(String transaction) {
+        String transactionId = transaction;
+        int compare = compareOrderCreditId(transactionId);
+        return compare;
+    }
+
     private int receivedCountRecords(String request) {
         val runner = new QueryRunner();
         int count = 0;
@@ -55,7 +77,7 @@ public class DataBaseUtil {
         return count;
     }
 
-    public Payment getLastCreationPaymentRecords() {
+    private Payment lastCreationPaymentRecords() {
         val runner = new QueryRunner();
         Payment lastRecord = null;
         try (
@@ -68,7 +90,7 @@ public class DataBaseUtil {
         return lastRecord;
     }
 
-    public Credit getLastCreationRecordCredit() {
+    private Credit lastCreationRecordCredit() {
         val runner = new QueryRunner();
         Credit lastRecord = null;
         try (
@@ -82,13 +104,13 @@ public class DataBaseUtil {
     }
 
     @Step("Сравнение transaction_id таблицы payment_entity с payment_id таблицы order_entity")
-    public int compareOrderPayment(String transaction) {
+    private int compareOrderPaymentId(String transaction) {
         val runner = new QueryRunner();
         int compare = 0;
         try (
                 val conn = DriverManager.getConnection(urlSql, user, password);
         ) {
-           val compareResult = runner.query(conn, comparePayment, new ScalarHandler<>(), transaction);
+            val compareResult = runner.query(conn, comparePayment, new ScalarHandler<>(), transaction);
             compare = Integer.parseInt(compareResult.toString());
         } catch (SQLException e) {
             e.printStackTrace();
@@ -97,7 +119,7 @@ public class DataBaseUtil {
     }
 
     @Step("Сравнение bank_id таблицы credit_request_entity с credit_id таблицы order_entity")
-    public int compareOrderCredit(String transaction) {
+    private int compareOrderCreditId(String transaction) {
         val runner = new QueryRunner();
         int compare = 0;
         try (
