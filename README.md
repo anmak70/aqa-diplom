@@ -22,6 +22,18 @@
 ### Issues
   На Issues № #1, #2, #3, #4, #21, #22 авто-тесты не делались. Остальные issues написаны по авто-тестам.
   
+  [Issues #1 - Не верный заголовок страницы в браузере](https://github.com/anmak70/aqa-diplom/issues/1#issue-554391611)
+  
+  [Issues #2 - Ошибка в названии страны тура](https://github.com/anmak70/aqa-diplom/issues/2#issue-554394677)
+  
+  [Issues #3 - Ошибочно появляется всплывающее окно](https://github.com/anmak70/aqa-diplom/issues/3#issue-554400788)
+  
+  [Issues #4 - После активации не изменяется цвет кнопок](https://github.com/anmak70/aqa-diplom/issues/4#issue-554403387)
+  
+  [Issues #21 - Не исчезают placeholder с ошибками после ввода валидных данных (карта)](https://github.com/anmak70/aqa-diplom/issues/21#issue-554970183)
+  
+  [Issues #22 - Не исчезают placeholder с ошибками после ввода валидных данных (кредит)](https://github.com/anmak70/aqa-diplom/issues/22#issue-554979690)
+  
 ### [Отчет о проведенном тестировании](https://github.com/anmak70/aqa-diplom/blob/master/Report.md) 
 
 ### [Отчёт о проведённой автоматизации](Summary.md)
