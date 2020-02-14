@@ -39,8 +39,36 @@ Issues по результатам упавших авто-тестов № #5 -
 
 Необходимо выполнить исправления в работе приложения по итогам выполнения автотестов. В данный момент корректная работа приложения не возможна. В первую очередь необходимо исправить ошибки при работе с базами данных:
 - списание с карты 4500000 вместо 45000 рублей в таблице "payment_entry"
+
+  [Issues #17 карта статус APPROVED](https://github.com/anmak70/aqa-diplom/issues/17#issue-554737897)
+  
+  [Issues #18 карта статус DECLINED](https://github.com/anmak70/aqa-diplom/issues/18#issue-554742356)
 - сделать внесение значения столбца "bank_id" из таблицы "credit_request_entry" в столбец "credit_id" таблицы "order_entry"
+
+  [Issues #19 карта статус APPROVED](https://github.com/anmak70/aqa-diplom/issues/19#issue-554751267)
+  
+  [Issues #20 карта статус DECLINED](https://github.com/anmak70/aqa-diplom/issues/20#issue-554753487)
 - сделать проверку при вводе данных карты (месяц, фамилия и имя, CVC)
+
+  [Issues #5 Не отслеживается ошибка при вводе месяца (по карте)](https://github.com/anmak70/aqa-diplom/issues/5#issue-554584607)
+  
+  [Issues #11 Не отслеживается ошибка при вводе месяца (кредит)](https://github.com/anmak70/aqa-diplom/issues/11#issue-554673956)
+  
+  [Issues #6 Не отслеживается ошибка при вводе в поле Владелец цифр (по карте)](https://github.com/anmak70/aqa-diplom/issues/6#issue-554656747)
+  
+  [Issues #12 Не отслеживается ошибка при вводе в поле Владелец цифр (по кредит)](https://github.com/anmak70/aqa-diplom/issues/12#issue-554676524)
+  
+  [Issues #7 Не отслеживается ошибка при вводе в поле Владелец спец.символов (по карте)](https://github.com/anmak70/aqa-diplom/issues/7#issue-554658676)
+  
+  [Issues #13 Не отслеживается ошибка при вводе в поле Владелец спец.символов (по кредит)](https://github.com/anmak70/aqa-diplom/issues/13#issue-554677667)
+  
+  [Issues #8 Не отслеживается ошибка при вводе в поле Владелец русского алфавита (по карте)](https://github.com/anmak70/aqa-diplom/issues/8#issue-554660449)
+  
+  [Issues #14 Не отслеживается ошибка при вводе в поле Владелец русского алфавита (по кредит)](https://github.com/anmak70/aqa-diplom/issues/14#issue-554730979)
+  
+  [Issues #9 Не отслеживается ошибка при вводе в поле CVC 000 (по карте)](https://github.com/anmak70/aqa-diplom/issues/9#issue-554667848)
+  
+  [Issues #15 Не отслеживается ошибка при вводе в поле CVC 000 (по кредит)](https://github.com/anmak70/aqa-diplom/issues/15#issue-554732224)
 
 В автотесты интегрирована возможность получить отчеты с помощью Allure. Так же можно получить стандартные отчеты  Gradle.
 
