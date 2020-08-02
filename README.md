@@ -4,7 +4,7 @@
 
 ### Запуск автотестов
 
-  1. Запускаем Docker командой docker-compoce up. Требуется установка Docker, если не установлен. Ждем подъема БД
+  1. Запускаем Docker командой docker-compose up. Требуется установка Docker, если не установлен. Ждем подъема БД
   
 ### Работа с MySQL  
   2. Запускаем приложение командой java -jar aqa-shop.jar --spring.profiles.active=mysql
